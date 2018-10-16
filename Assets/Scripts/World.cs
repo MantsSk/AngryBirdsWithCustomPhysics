@@ -30,12 +30,17 @@ public class World : MonoBehaviour
 		// System addition order matters, they will run in the same order
 		systems.Add(new GravitySystem());
 		systems.Add(new ForceSystem());
-		systems.Add(new MoveSystem());	
+		systems.Add(new InputSystem());	
+		systems.Add(new MoveSystem());
 		systems.Add(new CollisionSystem());
 		systems.Add(new WorldBoundsSystem());
 		systems.Add(new RenderingSystem());
-
+	
 		foreach (var system in systems)
+		{
+			system.Start(this);
+		}
+		/*foreach (var system in systems)
 		{
 			Profiler.BeginSample(system.GetType().Name);
 			system.Start(this);
@@ -43,12 +48,17 @@ public class World : MonoBehaviour
 		}
 		
 		Profiler.EndSample();
+		*/
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		Profiler.BeginSample("World.Update");
+		foreach (var system in systems)
+		{
+			system.Update(this, Time.timeSinceLevelLoad, Time.deltaTime);
+		}
+		/* Profiler.BeginSample("World.Update");
 		foreach (var system in systems)
 		{
 			Profiler.BeginSample(system.GetType().Name);
@@ -56,5 +66,6 @@ public class World : MonoBehaviour
 			Profiler.EndSample();
 		}
 		Profiler.EndSample();
+		*/
 	}
 }

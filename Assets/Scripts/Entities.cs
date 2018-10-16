@@ -18,17 +18,24 @@ public struct Entity
 public enum EntityFlags
 {
 	kFlagPosition = 1<<0,
-	kFlagMove = 1<<1,
+	kFlagInput = 1<<1,
 	kFlagWorldBounds = 1<<2,
 	kFlagGravity = 1<<3,
 	kFlagForce = 1<<4,
 	kFlagCollision = 1<<5,
+	kFlagMove = 1<<6
 }
 
 public struct MoveComponent
 {
 	public Vector2 velocity;
 	public Vector2 acceleration;
+}
+
+public struct InputComponent 
+{
+	public float horizontal;
+	public float vertical; 
 }
 
 public struct ForceComponent
@@ -48,6 +55,7 @@ public class Entities
 	public List<Vector2> positions = new List<Vector2>();
 	public List<EntityFlags> flags = new List<EntityFlags>();
 	public List<MoveComponent> moveComponents = new List<MoveComponent>();
+	public List<InputComponent> inputComponents = new List<InputComponent>();
 	public List<ForceComponent> forceComponents = new List<ForceComponent>();
 	public List<CollisionComponent> collisionComponents = new List<CollisionComponent>();
 
@@ -64,6 +72,7 @@ public class Entities
 		
 		// reserve space for all other components
 		moveComponents.Add(new MoveComponent());
+		inputComponents.Add(new InputComponent());
 		forceComponents.Add(new ForceComponent());
 		collisionComponents.Add(new CollisionComponent());
 		
@@ -79,7 +88,8 @@ public class Entities
 	{
 		for (var i = 0; i < count; i++)
 		{
-			AddEntity(new Vector2(Random.Range(-7.5f, 7.5f), Random.Range(-4f, 4f)));
+			//AddEntity(new Vector2(Random.Range(-7.5f, 7.5f), Random.Range(-4f, 4f)));
+			AddEntity(new Vector2(1f,1f));
 		}
 	}
 }

@@ -49,7 +49,7 @@ public class CollisionSystem : ISystemInterface
         {            
             velocityCache[i] = entities.moveComponents[i].velocity;
         }
-        
+            
         for (var i = 0; i < entities.flags.Count; i++)
         {
             // Check all pairs only once
@@ -93,7 +93,7 @@ public class CollisionSystem : ISystemInterface
                             velocityCache[i] -= force1.massInverse * impulse;
                             velocityCache[j] += force2.massInverse * impulse;
                         }        
-                    }
+                    } 
                 }
             }
             
