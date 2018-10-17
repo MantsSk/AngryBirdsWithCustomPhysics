@@ -60,4 +60,9 @@ public class WorldBoundsSystem : ISystemInterface
             }
         }
     }
+    
+    public void OnMouseDrag (World world) 
+    {
+
+    }
 }

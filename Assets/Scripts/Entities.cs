@@ -89,7 +89,7 @@ public class Entities
 		for (var i = 0; i < count; i++)
 		{
 			//AddEntity(new Vector2(Random.Range(-7.5f, 7.5f), Random.Range(-4f, 4f)));
-			AddEntity(new Vector2(1f,1f));
+			AddEntity(new Vector2(-3.05f,-2.75f));
 		}
 	}
 }

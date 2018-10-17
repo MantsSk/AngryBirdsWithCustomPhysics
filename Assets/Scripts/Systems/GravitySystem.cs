@@ -38,4 +38,8 @@ public class GravitySystem : ISystemInterface
             }
         }
     }
+    public void OnMouseDrag (World world) 
+    {
+
+    }
 }

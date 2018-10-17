@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveSystem : ISystemInterface 
-{
+{    
     public void Start(World world)
     {
         var entities = world.entities;
@@ -31,13 +31,17 @@ public class MoveSystem : ISystemInterface
             if (entities.flags[i].HasFlag(EntityFlags.kFlagMove))
             {
                 //pos = pos + v * dt + a * t^2 / 2
-                entities.positions[i] += entities.moveComponents[i].velocity * deltaTime +
-                    0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime;
+          //     entities.positions[i] += entities.moveComponents[i].velocity * deltaTime +
+          //          0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime;
 
-                var moveComponent = entities.moveComponents[i];
-                moveComponent.velocity += entities.moveComponents[i].acceleration * deltaTime;
-                entities.moveComponents[i] = moveComponent;
+          //      var moveComponent = entities.moveComponents[i];
+          //      moveComponent.velocity += entities.moveComponents[i].acceleration * deltaTime;
+          //      entities.moveComponents[i] = moveComponent;
             }
         }
+    }
+    public void OnMouseDrag (World world) 
+    {
+
     }
 }

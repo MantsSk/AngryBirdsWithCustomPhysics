@@ -6,4 +6,7 @@ public interface ISystemInterface
 	
 	// Update is called once per frame
 	void Update(World world, float time = 0f, float deltaTime = 0f);
+
+	void OnMouseDrag(World world);
+
 }

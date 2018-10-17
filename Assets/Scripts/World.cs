@@ -50,13 +50,20 @@ public class World : MonoBehaviour
 		Profiler.EndSample();
 		*/
 	}
+
 	
 	// Update is called once per frame
 	void Update () 
 	{
 		foreach (var system in systems)
 		{
+		//	if (Input.GetMouseButton(0) == this) 
+		//	{
+			//	system.OnMouseDrag(this);	
+		//	}
+			
 			system.Update(this, Time.timeSinceLevelLoad, Time.deltaTime);
+
 		}
 		/* Profiler.BeginSample("World.Update");
 		foreach (var system in systems)

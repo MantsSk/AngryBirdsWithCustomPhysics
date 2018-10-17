@@ -22,7 +22,7 @@ public class CollisionSystem : ISystemInterface
                 var collisionComponent = new CollisionComponent();
 
                 if (entities.forceComponents[i].massInverse > 1e-6f)
-                    collisionComponent.radius = 1.0f / entities.forceComponents[i].massInverse;
+                    collisionComponent.radius = 0.6f;
 
                 collisionComponent.coeffOfRestitution = Random.Range(0.1f, 0.9f);
 
@@ -43,7 +43,6 @@ public class CollisionSystem : ISystemInterface
     public void Update(World world, float time = 0, float deltaTime = 0)
     {
         var entities = world.entities;
-        
         // Init velocity cache
         for (var i = 0; i < entities.flags.Count; i++)
         {            
@@ -108,5 +107,9 @@ public class CollisionSystem : ISystemInterface
             
             velocityCache[i] = Vector2.zero;
         }
+    }
+    public void OnMouseDrag (World world) 
+    {
+
     }
 }

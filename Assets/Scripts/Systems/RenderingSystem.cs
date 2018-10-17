@@ -44,4 +44,8 @@ public class RenderingSystem : ISystemInterface
 		if (transformList.Count > 0)
 			Graphics.DrawMeshInstanced(mesh, 0, material, transformList);
 	}
+	public void OnMouseDrag (World world) 
+    {
+
+    }
 }
