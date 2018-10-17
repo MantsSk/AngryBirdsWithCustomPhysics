@@ -13,7 +13,7 @@ public class MoveSystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition))
             {
-                entities.AddComponent(new Entity(i), EntityFlags.kFlagMove);
+                entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagMove);
                 
                 var moveComponent = entities.moveComponents[i];
                 moveComponent.velocity = new Vector2(Random.Range(-3f,3f), Random.Range(-3f, 3f));
@@ -28,15 +28,15 @@ public class MoveSystem : ISystemInterface
         
         for (var i = 0; i < entities.flags.Count; i++)
         {
-            if (entities.flags[i].HasFlag(EntityFlags.kFlagMove))
+            if (entities.flags[i].HasFlag(EntityFlags.kFlagMove) && world.shouldShoot)
             {
                 //pos = pos + v * dt + a * t^2 / 2
-          //     entities.positions[i] += entities.moveComponents[i].velocity * deltaTime +
-          //          0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime;
+                entities.positions[i] += entities.moveComponents[i].velocity * deltaTime +
+                    0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime;
 
-          //      var moveComponent = entities.moveComponents[i];
-          //      moveComponent.velocity += entities.moveComponents[i].acceleration * deltaTime;
-          //      entities.moveComponents[i] = moveComponent;
+                var moveComponent = entities.moveComponents[i];
+                moveComponent.velocity += entities.moveComponents[i].acceleration * deltaTime;
+                entities.moveComponents[i] = moveComponent;
             }
         }
     }

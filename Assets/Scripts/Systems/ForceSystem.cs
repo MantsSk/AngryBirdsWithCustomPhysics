@@ -13,7 +13,7 @@ public class ForceSystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition))
             {
-                entities.AddComponent(new Entity(i), EntityFlags.kFlagForce);
+                entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagForce);
 
                 var forceComponent = new ForceComponent() {massInverse = Random.Range(0f, 5f), force = Vector2.zero};
                 entities.forceComponents[i] = forceComponent;

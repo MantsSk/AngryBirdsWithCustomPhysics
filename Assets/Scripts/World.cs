@@ -9,46 +9,44 @@ using UnityEngine.Profiling;
 public class World : MonoBehaviour 
 {	
 	public GameObject templateObject;
-	public int entityCount = 10;
+	public GameObject enemyTemplateObject;
+	public int entityCount = 1;
+	public int enemyEntityCount = 1;
 	public Rect worldBounds = new Rect(-10f, -5f, 20f, 10f);
 	public Vector2 gravity = Vector2.down * 9.81f;
+	public bool shouldShoot = false;
+
 
 	[NonSerialized]
-	public Entities entities;
+	public PlayerEntities entities;
+	public EnemyEntities enemyEntities;
 
 	protected List<ISystemInterface> systems;
 	
 	// Use this for initialization
 	void Start () 
 	{
-		Profiler.BeginSample("World.Start");
 		systems = new List<ISystemInterface>();
-		entities = new Entities();
 		
+		entities = new PlayerEntities();
+		enemyEntities = new EnemyEntities();
+
 		entities.Init(entityCount);
+		enemyEntities.Init(enemyEntityCount);
 
 		// System addition order matters, they will run in the same order
-		systems.Add(new GravitySystem());
-		systems.Add(new ForceSystem());
-		systems.Add(new InputSystem());	
-		systems.Add(new MoveSystem());
-		systems.Add(new CollisionSystem());
-		systems.Add(new WorldBoundsSystem());
+		//systems.Add(new GravitySystem());
+		//systems.Add(new ForceSystem());
+		//systems.Add(new InputSystem());	
+		//systems.Add(new MoveSystem());
+		//systems.Add(new CollisionSystem());
+		//systems.Add(new WorldBoundsSystem());
 		systems.Add(new RenderingSystem());
 	
 		foreach (var system in systems)
 		{
 			system.Start(this);
 		}
-		/*foreach (var system in systems)
-		{
-			Profiler.BeginSample(system.GetType().Name);
-			system.Start(this);
-			Profiler.EndSample();
-		}
-		
-		Profiler.EndSample();
-		*/
 	}
 
 	
@@ -57,22 +55,8 @@ public class World : MonoBehaviour
 	{
 		foreach (var system in systems)
 		{
-		//	if (Input.GetMouseButton(0) == this) 
-		//	{
-			//	system.OnMouseDrag(this);	
-		//	}
-			
 			system.Update(this, Time.timeSinceLevelLoad, Time.deltaTime);
-
+			Debug.Log(enemyEntities);
 		}
-		/* Profiler.BeginSample("World.Update");
-		foreach (var system in systems)
-		{
-			Profiler.BeginSample(system.GetType().Name);
-			system.Update(this, Time.timeSinceLevelLoad, Time.deltaTime);
-			Profiler.EndSample();
-		}
-		Profiler.EndSample();
-		*/
 	}
 }

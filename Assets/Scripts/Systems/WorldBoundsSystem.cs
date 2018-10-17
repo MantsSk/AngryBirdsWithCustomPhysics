@@ -13,7 +13,7 @@ public class WorldBoundsSystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition))
             {
-                entities.AddComponent(new Entity(i), EntityFlags.kFlagWorldBounds);
+                entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagWorldBounds);
             }
         }
     }

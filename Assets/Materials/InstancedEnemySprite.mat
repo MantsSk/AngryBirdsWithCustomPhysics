@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: InstancedSprite
-  m_Shader: {fileID: 4800000, guid: 5b460e428dc2d43be88eea7fd9696421, type: 3}
+  m_Name: InstancedEnemySprite
+  m_Shader: {fileID: 4800000, guid: 61e1903463a0f47aa9dbc8248543437e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 48b098efbf38c4712a6c35c5427690cb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 86ce912717672b8429c58e6960c12e25, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:

@@ -18,7 +18,7 @@ public class CollisionSystem : ISystemInterface
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition) &&
                 entities.flags[i].HasFlag(EntityFlags.kFlagForce))
             {
-                entities.AddComponent(new Entity(i), EntityFlags.kFlagCollision);
+                entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagCollision);
                 var collisionComponent = new CollisionComponent();
 
                 if (entities.forceComponents[i].massInverse > 1e-6f)

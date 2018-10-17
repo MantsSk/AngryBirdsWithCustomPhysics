@@ -13,7 +13,7 @@ public class GravitySystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition))
             {
-                entities.AddComponent(new Entity(i), EntityFlags.kFlagGravity);
+                entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagGravity);
             }
         }
     }

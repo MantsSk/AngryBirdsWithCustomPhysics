@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public struct Entity
+public struct PlayerEntity
 {
 	public int id;
 
-	public Entity(int id)
+	public PlayerEntity(int id)
 	{
 		this.id = id;
 	}
@@ -50,7 +50,7 @@ public struct CollisionComponent
 	public float coeffOfRestitution;
 }
 
-public class Entities
+public class PlayerEntities
 {
 	public List<Vector2> positions = new List<Vector2>();
 	public List<EntityFlags> flags = new List<EntityFlags>();
@@ -59,12 +59,12 @@ public class Entities
 	public List<ForceComponent> forceComponents = new List<ForceComponent>();
 	public List<CollisionComponent> collisionComponents = new List<CollisionComponent>();
 
-	public void AddComponent(Entity entity, EntityFlags flag)
+	public void AddComponent(PlayerEntity entity, EntityFlags flag)
 	{
 		flags[entity.id] |= flag;
 	}
 
-	public Entity AddEntity(Vector2 position)
+	public PlayerEntity AddEntity(Vector2 position)
 	{
 		// We assume that all entities have at least position component
 		positions.Add(position);
@@ -76,10 +76,10 @@ public class Entities
 		forceComponents.Add(new ForceComponent());
 		collisionComponents.Add(new CollisionComponent());
 		
-		return new Entity(positions.Count - 1);
+		return new PlayerEntity(positions.Count - 1);
 	}
 	
-	public Entity AddEntity()
+	public PlayerEntity AddEntity()
 	{
 		return AddEntity(Vector2.zero);
 	}
@@ -89,7 +89,7 @@ public class Entities
 		for (var i = 0; i < count; i++)
 		{
 			//AddEntity(new Vector2(Random.Range(-7.5f, 7.5f), Random.Range(-4f, 4f)));
-			AddEntity(new Vector2(-3.05f,-2.75f));
+			AddEntity(new Vector2(-3.05f,-2.95f));
 		}
 	}
 }
