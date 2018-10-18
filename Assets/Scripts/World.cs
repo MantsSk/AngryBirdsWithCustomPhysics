@@ -10,11 +10,13 @@ public class World : MonoBehaviour
 {	
 	public GameObject templateObject;
 	public GameObject enemyTemplateObject;
+	public GameObject enemyTemplateSmashedObj;
 	public int entityCount = 1;
 	public int enemyEntityCount = 1;
 	public Rect worldBounds = new Rect(-10f, -5f, 20f, 10f);
 	public Vector2 gravity = Vector2.down * 9.81f;
 	public bool shouldShoot = false;
+	public bool shouldSmash = false;
 
 
 	[NonSerialized]
@@ -35,12 +37,12 @@ public class World : MonoBehaviour
 		enemyEntities.Init(enemyEntityCount);
 
 		// System addition order matters, they will run in the same order
-		//systems.Add(new GravitySystem());
-		//systems.Add(new ForceSystem());
-		//systems.Add(new InputSystem());	
-		//systems.Add(new MoveSystem());
-		//systems.Add(new CollisionSystem());
-		//systems.Add(new WorldBoundsSystem());
+		systems.Add(new GravitySystem());
+		systems.Add(new ForceSystem());
+		systems.Add(new InputSystem());	
+		systems.Add(new MoveSystem());
+		systems.Add(new CollisionSystem());
+		systems.Add(new WorldBoundsSystem());
 		systems.Add(new RenderingSystem());
 	
 		foreach (var system in systems)

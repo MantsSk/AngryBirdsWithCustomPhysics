@@ -306,16 +306,19 @@ MonoBehaviour:
     type: 3}
   enemyTemplateObject: {fileID: 6825595481546032800, guid: 537abefcdd13c4a889a5a828db64bb90,
     type: 3}
+  enemyTemplateSmashedObj: {fileID: 6825595481546032800, guid: 8336657299894414a8751689a6ba8203,
+    type: 3}
   entityCount: 1
   enemyEntityCount: 1
   worldBounds:
     serializedVersion: 2
     x: -8
-    y: -4
+    y: -3.5
     width: 15
     height: 10
   gravity: {x: 0, y: -9.81}
   shouldShoot: 0
+  shouldSmash: 0
 --- !u!4 &1187221517
 Transform:
   m_ObjectHideFlags: 0

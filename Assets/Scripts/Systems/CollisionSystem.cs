@@ -5,13 +5,14 @@ using UnityEngine;
 public class CollisionSystem : ISystemInterface
 {
     private Vector2[] velocityCache;
+    private Vector2[] enemyVelocityCache;
     
     public void Start(World world)
     {
         var entities = world.entities;
-
+        var enemyEntities = world.enemyEntities;
         velocityCache = new Vector2[entities.flags.Count];
-        
+                
         // add randomized collision radius (derived from mass) and coefficient of restitution
         for (var i = 0; i < entities.flags.Count; i++)
         {
@@ -29,6 +30,24 @@ public class CollisionSystem : ISystemInterface
                 entities.collisionComponents[i] = collisionComponent;
             }
         }
+
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {
+            if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagPosition) &&
+                enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagForce))
+            {
+                enemyEntities.AddEnemyComponent(new EnemyEntity(i), EnemyEntityFlags.kFlagCollision);
+                var enemyCollisionComponent = new EnemyCollisionComponent();
+
+                if (enemyEntities.enemyForceComponents[i].massInverse > 1e-6f)
+                    enemyCollisionComponent.radius = 0.6f;
+
+                enemyCollisionComponent.coeffOfRestitution = Random.Range(0.1f, 0.9f);
+
+                enemyEntities.enemyCollisionComponents[i] = enemyCollisionComponent;
+            }
+        }
+
     }
 
     public static bool CirclesCollide(Vector2 pos1, float r1, Vector2 pos2, float r2)
@@ -43,6 +62,8 @@ public class CollisionSystem : ISystemInterface
     public void Update(World world, float time = 0, float deltaTime = 0)
     {
         var entities = world.entities;
+        var enemyEntities = world.enemyEntities;
+        
         // Init velocity cache
         for (var i = 0; i < entities.flags.Count; i++)
         {            
@@ -52,21 +73,22 @@ public class CollisionSystem : ISystemInterface
         for (var i = 0; i < entities.flags.Count; i++)
         {
             // Check all pairs only once
-            for (var j = i + 1; j < entities.flags.Count; j++)
+            for (var j = 0; j < enemyEntities.enemyFlags.Count; j++)
             {
                 if (entities.flags[i].HasFlag(EntityFlags.kFlagCollision) && 
-                    entities.flags[j].HasFlag(EntityFlags.kFlagCollision))
+                    enemyEntities.enemyFlags[j].HasFlag(EnemyEntityFlags.kFlagCollision))
                 {
                     var col1 = entities.collisionComponents[i];
-                    var col2 = entities.collisionComponents[j];
+                    var col2 = enemyEntities.enemyCollisionComponents[j];
 
                     var pos1 = entities.positions[i];
-                    var pos2 = entities.positions[j];
+                    var pos2 = enemyEntities.enemyPositions[j];
 
                     if (CirclesCollide(pos1, col1.radius, pos2, col2.radius))
                     {
+                        world.shouldSmash = true;
                         var move1 = entities.moveComponents[i];
-                        var move2 = entities.moveComponents[j];
+                        var move2 = enemyEntities.enemyMoveComponents[j];
 
                         // Relative velocity
                         Vector2 relVel = move2.velocity - move1.velocity;
@@ -79,7 +101,7 @@ public class CollisionSystem : ISystemInterface
                         if (velocityProjection < 0)
                         {
                             var force1 = entities.forceComponents[i];
-                            var force2 = entities.forceComponents[j];
+                            var force2 = enemyEntities.enemyForceComponents[j];
                             
                             float cr = Mathf.Min(col1.coeffOfRestitution, col2.coeffOfRestitution);
                             
@@ -108,8 +130,70 @@ public class CollisionSystem : ISystemInterface
             velocityCache[i] = Vector2.zero;
         }
     }
-    public void OnMouseDrag (World world) 
-    {
-
-    }
 }
+
+/*
+        //enemy code
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {            
+          //  enemyVelocityCache[i] = enemyEntities.enemyMoveComponents[i].velocity;
+        }
+            
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {
+            // Check all pairs only once
+            for (var j = i + 1; j < enemyEntities.enemyFlags.Count; j++)
+            {
+                if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagCollision) && 
+                    enemyEntities.enemyFlags[j].HasFlag(EnemyEntityFlags.kFlagCollision))
+                {
+                    var enemyCol1 = enemyEntities.enemyCollisionComponents[i];
+                    var enemyCol2 = enemyEntities.enemyCollisionComponents[j];
+
+                    var enemyPos1 = enemyEntities.enemyPositions[i];
+                    var enemyPos2 = enemyEntities.enemyPositions[j];
+
+                    if (CirclesCollide(enemyPos1, enemyCol1.radius, enemyPos2, enemyCol2.radius))
+                    {
+                        var enemyMove1 = enemyEntities.enemyMoveComponents[i];
+                        var enemyMove2 = enemyEntities.enemyMoveComponents[j];
+
+                        // Relative velocity
+                        Vector2 relVel = enemyMove2.velocity - enemyMove1.velocity;
+                        // Collision normal
+                        Vector2 normal = (enemyPos2 - enemyPos1).normalized;
+
+                        float velocityProjection = Vector2.Dot(relVel, normal);
+
+                        // Process only if objects are not separating
+                        if (velocityProjection < 0)
+                        {
+                            var force1 = enemyEntities.enemyForceComponents[i];
+                            var force2 = enemyEntities.enemyForceComponents[j];
+                            
+                            float cr = Mathf.Min(enemyCol1.coeffOfRestitution, enemyCol1.coeffOfRestitution);
+                            
+                            // Impulse scale
+                            float impScale = -(1f + cr) * velocityProjection /
+                                             (force1.massInverse + force2.massInverse);
+
+                            Vector2 impulse = impScale * normal;
+
+                         //   enemyVelocityCache[i] -= force1.massInverse * impulse;
+                         //   enemyVelocityCache[j] += force2.massInverse * impulse;
+                        }        
+                    } 
+                }
+            }
+            
+        }
+
+        // Apply cached velocities
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {
+            var enemyMove1 = enemyEntities.enemyMoveComponents[i];
+          //  enemyMove1.velocity = enemyVelocityCache[i];
+            enemyEntities.enemyMoveComponents[i] = enemyMove1;
+            
+           // enemyVelocityCache[i] = Vector2.zero;
+        } */
