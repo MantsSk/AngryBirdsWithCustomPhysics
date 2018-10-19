@@ -50,6 +50,7 @@ public struct CollisionComponent
 	public float coeffOfRestitution;
 }
 
+
 public class PlayerEntities
 {
 	public List<Vector2> positions = new List<Vector2>();

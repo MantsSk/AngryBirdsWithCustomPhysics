@@ -42,6 +42,7 @@ public struct EnemyCollisionComponent
 	public float radius;
 	public float coeffOfRestitution;
 	public bool isDamaged;
+	public bool shouldSmash;
 }
 
 public class EnemyEntities

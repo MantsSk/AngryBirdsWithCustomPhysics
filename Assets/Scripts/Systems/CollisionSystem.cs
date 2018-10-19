@@ -7,13 +7,16 @@ public class CollisionSystem : ISystemInterface
     private Vector2[] velocityCache;
     private Vector2[] enemyVelocityCache;
     private bool[] enemyRenderCache;
+    private bool[] enemyMoveCache;
      
     public void Start(World world)
     {
         var entities = world.entities;
         var enemyEntities = world.enemyEntities;
-        velocityCache = new Vector2[entities.flags.Count + enemyEntities.enemyFlags.Count];
+        velocityCache = new Vector2[entities.flags.Count];
+        enemyVelocityCache = new Vector2[enemyEntities.enemyFlags.Count];
         enemyRenderCache = new bool [enemyEntities.enemyFlags.Count];
+        enemyMoveCache = new bool [enemyEntities.enemyFlags.Count];
                 
         // add randomized collision radius (derived from mass) and coefficient of restitution
         for (var i = 0; i < entities.flags.Count; i++)
@@ -42,7 +45,7 @@ public class CollisionSystem : ISystemInterface
                 var enemyCollisionComponent = new EnemyCollisionComponent();
 
                 if (enemyEntities.enemyForceComponents[i].massInverse > 1e-6f)
-                    enemyCollisionComponent.radius = 0.6f;
+                    enemyCollisionComponent.radius = Random.Range(0.5f, 0.7f);
 
                 enemyCollisionComponent.coeffOfRestitution = Random.Range(0.1f, 0.9f);
 
@@ -88,9 +91,11 @@ public class CollisionSystem : ISystemInterface
 
                     if (CirclesCollide(pos1, col1.radius, pos2, col2.radius))
                     {
-                        world.shouldSmash = true;
                         var move1 = entities.moveComponents[i];
                         var move2 = enemyEntities.enemyMoveComponents[j];
+
+                        col2.isDamaged = true;
+                        col2.shouldSmash = true;
 
                         // Relative velocity
                         Vector2 relVel = move2.velocity - move1.velocity;
@@ -98,7 +103,7 @@ public class CollisionSystem : ISystemInterface
                         Vector2 normal = (pos2 - pos1).normalized;
 
                         float velocityProjection = Vector2.Dot(relVel, normal);
-                        col2.isDamaged = true;
+
 
                         // Process only if objects are not separating
                         if (velocityProjection < 0)
@@ -114,9 +119,10 @@ public class CollisionSystem : ISystemInterface
 
                             Vector2 impulse = impScale * normal;
 
-                            velocityCache[i] -= force1.massInverse * impulse; // i need to make seperate velocity caches
-                            velocityCache[j] += force2.massInverse * impulse;
+                            velocityCache[i] -= force1.massInverse * (impulse*0.90f); // i need to make seperate velocity caches
+                            enemyVelocityCache[j] += force2.massInverse * impulse;
                             enemyRenderCache[j] = col2.isDamaged;
+                            enemyMoveCache[j] = col2.shouldSmash;
                         }        
                     } 
                 }
@@ -135,10 +141,21 @@ public class CollisionSystem : ISystemInterface
 
         for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
         {    
-            var dam = enemyEntities.enemyCollisionComponents[i];
-            dam.isDamaged = enemyRenderCache[i];
-            enemyEntities.enemyCollisionComponents[i] = dam;
+            var move2 = enemyEntities.enemyMoveComponents[i];
+            move2.velocity = enemyVelocityCache[i];
+            enemyEntities.enemyMoveComponents[i] = move2;
+            enemyVelocityCache[i] = Vector2.zero;
+
+            Debug.Log(i + "enemy render cache: " + enemyEntities.enemyCollisionComponents[i].shouldSmash);
+
+            var col = enemyEntities.enemyCollisionComponents[i];
+            col.isDamaged = enemyRenderCache[i];
+            enemyEntities.enemyCollisionComponents[i] = col;
             enemyRenderCache[i] = false;
+
+            col.shouldSmash = enemyMoveCache[i];
+            enemyEntities.enemyCollisionComponents[i] = col;
+            enemyMoveCache[i] = false;
         }
     }
 }

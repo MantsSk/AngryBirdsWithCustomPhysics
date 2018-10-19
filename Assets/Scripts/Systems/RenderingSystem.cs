@@ -9,17 +9,24 @@ public class RenderingSystem : ISystemInterface
 	Material [] enemyMaterial; 
 	Mesh [] mesh;
 	Material [] material;
+	Shader shader;
+	bool [] meshIsNull;
+
+
 	
 	public void Start(World world)
 	{
 		//do nothing
 		var entities = world.entities;
 		var enemyEntities = world.enemyEntities;
+		shader = world.usedShader;
 
 		enemyMesh = new Mesh [world.enemyEntities.enemyFlags.Count];
 		enemyMaterial = new Material [world.enemyEntities.enemyFlags.Count];
 		mesh = new Mesh [world.entities.flags.Count];
 		material = new Material [world.entities.flags.Count];
+		meshIsNull = new bool[world.enemyEntities.enemyFlags.Count];
+
 		
 		for (var i = 0; i < mesh.Length; i++)
 		{
@@ -31,6 +38,7 @@ public class RenderingSystem : ISystemInterface
 		{
 			enemyMesh[i] = world.enemyTemplateObject.GetComponent<MeshFilter>().sharedMesh;
 			enemyMaterial[i] = world.enemyTemplateObject.GetComponent<Renderer>().sharedMaterial;
+			meshIsNull[i] = true;
 		}
 	}
 
@@ -58,12 +66,12 @@ public class RenderingSystem : ISystemInterface
 			// DrawMeshInstanced has limitation of up to 1023(?) items per single call
 			if (transformList.Count >= BATCH_SIZE)
 			{
-				Graphics.DrawMeshInstanced(mesh[i], 0, material[i], transformList);
+				Graphics.DrawMesh(mesh[i], Vector3.zero, Quaternion.identity, material[i], 0);
 				transformList.Clear();
 			}
 			if (transformList.Count > 0) 
 			{
-				Graphics.DrawMeshInstanced(mesh[i], 0, material[i], transformList);
+				Graphics.DrawMesh(mesh[i], entities.positions[i], Quaternion.identity, material[i], 0);
 			}
 		}	
 
@@ -83,13 +91,13 @@ public class RenderingSystem : ISystemInterface
 
 			if (enemyTransformList.Count >= BATCH_SIZE)
 			{
-				Graphics.DrawMeshInstanced(enemyMesh[i], 0, enemyMaterial[i], enemyTransformList);
+				Graphics.DrawMesh(enemyMesh[i], enemyEntities.enemyPositions[i], Quaternion.identity, enemyMaterial[i], 0);
 				enemyTransformList.Clear();
 			}
 			// Remaining objects
 			if (enemyTransformList.Count > 0) 
 			{
-				Graphics.DrawMeshInstanced(enemyMesh[i], 0, enemyMaterial[i], enemyTransformList);
+				Graphics.DrawMesh(enemyMesh[i], enemyEntities.enemyPositions[i], Quaternion.identity, enemyMaterial[i], 0);
 			}
 		}
 	}

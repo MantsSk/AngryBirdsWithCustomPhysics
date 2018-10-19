@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InputSystem : ISystemInterface
 {
+    int throwValue;
+
     public void Start(World world)
     {
         var entities = world.entities;
@@ -25,6 +27,14 @@ public class InputSystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagInput))
             {
+                if (Input.GetKey(KeyCode.LeftArrow)) 
+                {
+                    if (throwValue < 20) 
+                    {
+                        entities.positions[i] -= new Vector2(0.1f, 0.0f);
+                        throwValue += 1;
+                    }
+                }
                 if (Input.GetKeyUp(KeyCode.LeftArrow)) 
                 {
                     world.shouldShoot = true;
@@ -39,18 +49,6 @@ public class InputSystem : ISystemInterface
                     entities.moveComponents[i] = moveComponent;
                 }
             }
-        }
-    }
-
-    public void OnMouseDrag (World world) 
-    {
-        var entities = world.entities;
-
-        for (var i = 0; i < entities.flags.Count; i++)
-        {
-            Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 100f);
-            Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-            entities.positions[i] = objPosition;
         }
     }
 }

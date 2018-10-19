@@ -55,7 +55,7 @@ public class MoveSystem : ISystemInterface
         }
         for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
         {
-            if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagMove) && world.shouldSmash)
+            if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagMove) && enemyEntities.enemyCollisionComponents[i].shouldSmash == true)
             {
                 //pos = pos + v * dt + a * t^2 / 2
                 enemyEntities.enemyPositions[i] += enemyEntities.enemyMoveComponents[i].velocity * deltaTime +
