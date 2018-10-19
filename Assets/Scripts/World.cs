@@ -58,7 +58,6 @@ public class World : MonoBehaviour
 		foreach (var system in systems)
 		{
 			system.Update(this, Time.timeSinceLevelLoad, Time.deltaTime);
-			Debug.Log(enemyEntities);
 		}
 	}
 }

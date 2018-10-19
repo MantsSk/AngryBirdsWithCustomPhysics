@@ -12,7 +12,6 @@ public class InputSystem : ISystemInterface
         {
             if (entities.flags[i].HasFlag(EntityFlags.kFlagPosition))
             {
-                Debug.Log("hohoho");
                 entities.AddComponent(new PlayerEntity(i), EntityFlags.kFlagInput);
             }
         }

@@ -309,7 +309,7 @@ MonoBehaviour:
   enemyTemplateSmashedObj: {fileID: 6825595481546032800, guid: 8336657299894414a8751689a6ba8203,
     type: 3}
   entityCount: 1
-  enemyEntityCount: 1
+  enemyEntityCount: 4
   worldBounds:
     serializedVersion: 2
     x: -8

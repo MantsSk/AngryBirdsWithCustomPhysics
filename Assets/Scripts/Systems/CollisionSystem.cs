@@ -6,12 +6,14 @@ public class CollisionSystem : ISystemInterface
 {
     private Vector2[] velocityCache;
     private Vector2[] enemyVelocityCache;
-    
+    private bool[] enemyRenderCache;
+     
     public void Start(World world)
     {
         var entities = world.entities;
         var enemyEntities = world.enemyEntities;
-        velocityCache = new Vector2[entities.flags.Count];
+        velocityCache = new Vector2[entities.flags.Count + enemyEntities.enemyFlags.Count];
+        enemyRenderCache = new bool [enemyEntities.enemyFlags.Count];
                 
         // add randomized collision radius (derived from mass) and coefficient of restitution
         for (var i = 0; i < entities.flags.Count; i++)
@@ -96,6 +98,7 @@ public class CollisionSystem : ISystemInterface
                         Vector2 normal = (pos2 - pos1).normalized;
 
                         float velocityProjection = Vector2.Dot(relVel, normal);
+                        col2.isDamaged = true;
 
                         // Process only if objects are not separating
                         if (velocityProjection < 0)
@@ -111,8 +114,9 @@ public class CollisionSystem : ISystemInterface
 
                             Vector2 impulse = impScale * normal;
 
-                            velocityCache[i] -= force1.massInverse * impulse;
+                            velocityCache[i] -= force1.massInverse * impulse; // i need to make seperate velocity caches
                             velocityCache[j] += force2.massInverse * impulse;
+                            enemyRenderCache[j] = col2.isDamaged;
                         }        
                     } 
                 }
@@ -120,14 +124,21 @@ public class CollisionSystem : ISystemInterface
             
         }
 
-        // Apply cached velocities
+        // Apply cached velocities and renders
         for (var i = 0; i < entities.flags.Count; i++)
         {
             var move1 = entities.moveComponents[i];
             move1.velocity = velocityCache[i];
             entities.moveComponents[i] = move1;
-            
             velocityCache[i] = Vector2.zero;
+        }
+
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {    
+            var dam = enemyEntities.enemyCollisionComponents[i];
+            dam.isDamaged = enemyRenderCache[i];
+            enemyEntities.enemyCollisionComponents[i] = dam;
+            enemyRenderCache[i] = false;
         }
     }
 }
