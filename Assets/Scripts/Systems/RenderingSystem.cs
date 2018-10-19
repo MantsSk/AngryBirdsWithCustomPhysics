@@ -19,7 +19,6 @@ public class RenderingSystem : ISystemInterface
 		//do nothing
 		var entities = world.entities;
 		var enemyEntities = world.enemyEntities;
-		shader = world.usedShader;
 
 		enemyMesh = new Mesh [world.enemyEntities.enemyFlags.Count];
 		enemyMaterial = new Material [world.enemyEntities.enemyFlags.Count];
@@ -86,6 +85,10 @@ public class RenderingSystem : ISystemInterface
 			var enemyScale = 2.0f * Vector2.one;
 			var enemyPos = enemyEntities.enemyPositions[i];
 			var enemyMtrx = new Matrix4x4();
+
+			if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagCollision))
+			enemyScale *= enemyEntities.enemyCollisionComponents[i].radius;
+
 			enemyMtrx.SetTRS(enemyPos, Quaternion.Euler(Vector3.zero), enemyScale);
 			enemyTransformList.Add(enemyMtrx);
 

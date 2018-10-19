@@ -11,7 +11,6 @@ public class World : MonoBehaviour
 	public GameObject templateObject;
 	public GameObject enemyTemplateObject;
 	public GameObject enemyTemplateSmashedObj;
-	public Shader usedShader;
 	public int entityCount = 1;
 	public int enemyEntityCount = 1;
 	public Rect worldBounds = new Rect(-10f, -5f, 20f, 10f);

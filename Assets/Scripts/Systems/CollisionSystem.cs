@@ -28,7 +28,7 @@ public class CollisionSystem : ISystemInterface
                 var collisionComponent = new CollisionComponent();
 
                 if (entities.forceComponents[i].massInverse > 1e-6f)
-                    collisionComponent.radius = 0.6f;
+                    collisionComponent.radius = 0.4f;
 
                 collisionComponent.coeffOfRestitution = Random.Range(0.1f, 0.9f);
 
@@ -45,7 +45,7 @@ public class CollisionSystem : ISystemInterface
                 var enemyCollisionComponent = new EnemyCollisionComponent();
 
                 if (enemyEntities.enemyForceComponents[i].massInverse > 1e-6f)
-                    enemyCollisionComponent.radius = Random.Range(0.5f, 0.7f);
+                    enemyCollisionComponent.radius = 0.4f;
 
                 enemyCollisionComponent.coeffOfRestitution = Random.Range(0.1f, 0.9f);
 
@@ -74,10 +74,13 @@ public class CollisionSystem : ISystemInterface
         {            
             velocityCache[i] = entities.moveComponents[i].velocity;
         }
+        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
+        {
+            enemyVelocityCache[i] = enemyEntities.enemyMoveComponents[i].velocity;
+        }
             
         for (var i = 0; i < entities.flags.Count; i++)
         {
-            // Check all pairs only once
             for (var j = 0; j < enemyEntities.enemyFlags.Count; j++)
             {
                 if (entities.flags[i].HasFlag(EntityFlags.kFlagCollision) && 
@@ -91,6 +94,7 @@ public class CollisionSystem : ISystemInterface
 
                     if (CirclesCollide(pos1, col1.radius, pos2, col2.radius))
                     {
+                        Debug.Log("collision happening");
                         var move1 = entities.moveComponents[i];
                         var move2 = enemyEntities.enemyMoveComponents[j];
 
@@ -103,7 +107,6 @@ public class CollisionSystem : ISystemInterface
                         Vector2 normal = (pos2 - pos1).normalized;
 
                         float velocityProjection = Vector2.Dot(relVel, normal);
-
 
                         // Process only if objects are not separating
                         if (velocityProjection < 0)
@@ -119,15 +122,14 @@ public class CollisionSystem : ISystemInterface
 
                             Vector2 impulse = impScale * normal;
 
-                            velocityCache[i] -= force1.massInverse * (impulse*0.90f); // i need to make seperate velocity caches
-                            enemyVelocityCache[j] += force2.massInverse * impulse;
+                            velocityCache[i] -= force1.massInverse * impulse; // i need to make seperate velocity caches
+                            enemyVelocityCache[j] += force2.massInverse * impulse * new Vector2(5f,0.1f);
                             enemyRenderCache[j] = col2.isDamaged;
                             enemyMoveCache[j] = col2.shouldSmash;
                         }        
                     } 
                 }
-            }
-            
+            }         
         }
 
         // Apply cached velocities and renders
@@ -146,8 +148,6 @@ public class CollisionSystem : ISystemInterface
             enemyEntities.enemyMoveComponents[i] = move2;
             enemyVelocityCache[i] = Vector2.zero;
 
-            Debug.Log(i + "enemy render cache: " + enemyEntities.enemyCollisionComponents[i].shouldSmash);
-
             var col = enemyEntities.enemyCollisionComponents[i];
             col.isDamaged = enemyRenderCache[i];
             enemyEntities.enemyCollisionComponents[i] = col;
@@ -159,69 +159,3 @@ public class CollisionSystem : ISystemInterface
         }
     }
 }
-
-/*
-        //enemy code
-        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
-        {            
-          //  enemyVelocityCache[i] = enemyEntities.enemyMoveComponents[i].velocity;
-        }
-            
-        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
-        {
-            // Check all pairs only once
-            for (var j = i + 1; j < enemyEntities.enemyFlags.Count; j++)
-            {
-                if (enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagCollision) && 
-                    enemyEntities.enemyFlags[j].HasFlag(EnemyEntityFlags.kFlagCollision))
-                {
-                    var enemyCol1 = enemyEntities.enemyCollisionComponents[i];
-                    var enemyCol2 = enemyEntities.enemyCollisionComponents[j];
-
-                    var enemyPos1 = enemyEntities.enemyPositions[i];
-                    var enemyPos2 = enemyEntities.enemyPositions[j];
-
-                    if (CirclesCollide(enemyPos1, enemyCol1.radius, enemyPos2, enemyCol2.radius))
-                    {
-                        var enemyMove1 = enemyEntities.enemyMoveComponents[i];
-                        var enemyMove2 = enemyEntities.enemyMoveComponents[j];
-
-                        // Relative velocity
-                        Vector2 relVel = enemyMove2.velocity - enemyMove1.velocity;
-                        // Collision normal
-                        Vector2 normal = (enemyPos2 - enemyPos1).normalized;
-
-                        float velocityProjection = Vector2.Dot(relVel, normal);
-
-                        // Process only if objects are not separating
-                        if (velocityProjection < 0)
-                        {
-                            var force1 = enemyEntities.enemyForceComponents[i];
-                            var force2 = enemyEntities.enemyForceComponents[j];
-                            
-                            float cr = Mathf.Min(enemyCol1.coeffOfRestitution, enemyCol1.coeffOfRestitution);
-                            
-                            // Impulse scale
-                            float impScale = -(1f + cr) * velocityProjection /
-                                             (force1.massInverse + force2.massInverse);
-
-                            Vector2 impulse = impScale * normal;
-
-                         //   enemyVelocityCache[i] -= force1.massInverse * impulse;
-                         //   enemyVelocityCache[j] += force2.massInverse * impulse;
-                        }        
-                    } 
-                }
-            }
-            
-        }
-
-        // Apply cached velocities
-        for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
-        {
-            var enemyMove1 = enemyEntities.enemyMoveComponents[i];
-          //  enemyMove1.velocity = enemyVelocityCache[i];
-            enemyEntities.enemyMoveComponents[i] = enemyMove1;
-            
-           // enemyVelocityCache[i] = Vector2.zero;
-        } */
