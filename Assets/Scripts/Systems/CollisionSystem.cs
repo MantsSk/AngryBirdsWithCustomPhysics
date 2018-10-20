@@ -123,7 +123,7 @@ public class CollisionSystem : ISystemInterface
                             Vector2 impulse = impScale * normal;
 
                             velocityCache[i] -= force1.massInverse * impulse; // i need to make seperate velocity caches
-                            enemyVelocityCache[j] += force2.massInverse * impulse * new Vector2(5f,0.1f);
+                            enemyVelocityCache[j] += force2.massInverse * impulse * new Vector2(1.2f,1.5f);
                             enemyRenderCache[j] = col2.isDamaged;
                             enemyMoveCache[j] = col2.shouldSmash;
                         }        
@@ -142,7 +142,7 @@ public class CollisionSystem : ISystemInterface
         }
 
         for (var i = 0; i < enemyEntities.enemyFlags.Count; i++)
-        {    
+        {                
             var move2 = enemyEntities.enemyMoveComponents[i];
             move2.velocity = enemyVelocityCache[i];
             enemyEntities.enemyMoveComponents[i] = move2;
@@ -155,7 +155,7 @@ public class CollisionSystem : ISystemInterface
 
             col.shouldSmash = enemyMoveCache[i];
             enemyEntities.enemyCollisionComponents[i] = col;
-            enemyMoveCache[i] = false;
+            //enemyMoveCache[i] = false;
         }
     }
 }

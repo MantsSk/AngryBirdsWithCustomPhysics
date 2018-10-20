@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputSystem : ISystemInterface
 {
-    int throwValue;
+    int localThrowValue;
 
     public void Start(World world)
     {
@@ -29,10 +29,13 @@ public class InputSystem : ISystemInterface
             {
                 if (Input.GetKey(KeyCode.LeftArrow)) 
                 {
-                    if (throwValue < 20) 
+                    if (entities.inputComponents[i].throwValue < 100) 
                     {
                         entities.positions[i] -= new Vector2(0.1f, 0.0f);
-                        throwValue += 1;
+                        localThrowValue += 1;
+                        var throwLocal = entities.inputComponents[i];
+                        throwLocal.throwValue += localThrowValue;
+                        entities.inputComponents[i] = throwLocal;
                     }
                 }
                 if (Input.GetKeyUp(KeyCode.LeftArrow)) 

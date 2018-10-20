@@ -71,9 +71,4 @@ public class ForceSystem : ISystemInterface
             }
         }
     }
-
-    public void OnMouseDrag (World world) 
-    {
-
-    }
 }

@@ -34,8 +34,7 @@ public struct MoveComponent
 
 public struct InputComponent 
 {
-	public float horizontal;
-	public float vertical; 
+	public int throwValue;
 }
 
 public struct ForceComponent

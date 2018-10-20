@@ -54,18 +54,12 @@ public class GravitySystem : ISystemInterface
                 enemyEntities.enemyFlags[i].HasFlag(EnemyEntityFlags.kFlagForce))
             {
                 var enemyForceComponent = enemyEntities.enemyForceComponents[i];
-                
                 // F = m * g
                 if (enemyForceComponent.massInverse > 1e-6f)
                     enemyForceComponent.force += gravity / enemyForceComponent.massInverse;
                 
                 enemyEntities.enemyForceComponents[i] = enemyForceComponent;
             }
-        }
-        
-    }
-    public void OnMouseDrag (World world) 
-    {
-
+        }   
     }
 }

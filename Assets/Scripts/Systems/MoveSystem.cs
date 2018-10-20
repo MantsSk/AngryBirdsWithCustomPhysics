@@ -46,7 +46,7 @@ public class MoveSystem : ISystemInterface
             {
                 //pos = pos + v * dt + a * t^2 / 2
                 entities.positions[i] += entities.moveComponents[i].velocity * deltaTime +
-                    0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime;
+                    0.5f * entities.moveComponents[i].acceleration * deltaTime * deltaTime * new Vector2(entities.inputComponents[i].throwValue/90,entities.inputComponents[i].throwValue * -0.4f);
 
                 var moveComponent = entities.moveComponents[i];
                 moveComponent.velocity += entities.moveComponents[i].acceleration * deltaTime;

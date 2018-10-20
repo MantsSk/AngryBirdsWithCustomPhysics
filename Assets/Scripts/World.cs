@@ -16,8 +16,6 @@ public class World : MonoBehaviour
 	public Rect worldBounds = new Rect(-10f, -5f, 20f, 10f);
 	public Vector2 gravity = Vector2.down * 9.81f;
 	public bool shouldShoot = false;
-	public bool shouldSmash = false;
-
 
 	[NonSerialized]
 	public PlayerEntities entities;

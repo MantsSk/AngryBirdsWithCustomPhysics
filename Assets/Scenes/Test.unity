@@ -147,7 +147,7 @@ Camera:
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
@@ -322,16 +322,15 @@ MonoBehaviour:
   enemyTemplateSmashedObj: {fileID: 6825595481546032800, guid: 8336657299894414a8751689a6ba8203,
     type: 3}
   entityCount: 1
-  enemyEntityCount: 10
+  enemyEntityCount: 9
   worldBounds:
     serializedVersion: 2
     x: -8
-    y: -3.5
+    y: -3.8
     width: 15
     height: 10
   gravity: {x: 0, y: -9.81}
   shouldShoot: 0
-  shouldSmash: 0
 --- !u!4 &1187221517
 Transform:
   m_ObjectHideFlags: 0
@@ -419,8 +418,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002919573}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.038, y: -3.91, z: 0}
-  m_LocalScale: {x: 1.0972499, y: 1, z: 1}
+  m_LocalPosition: {x: 0.008, y: -3.91, z: 0}
+  m_LocalScale: {x: 1.4535841, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
