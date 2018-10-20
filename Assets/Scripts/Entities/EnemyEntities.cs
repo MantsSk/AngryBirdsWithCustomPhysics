@@ -82,7 +82,7 @@ public class EnemyEntities
 		for (var i = 0; i < count; i++)
 		{
 		//	AddEnemyEntity(new Vector2(2.0f,-2.75f));
-			AddEnemyEntity(new Vector2(Random.Range(2.85f,7.05f),Random.Range(-5.05f,-0.75f)));
+			AddEnemyEntity(new Vector2(Random.Range(2.85f,7.05f),Random.Range(-8.05f,-0.75f)));
 		}
 	}
 
